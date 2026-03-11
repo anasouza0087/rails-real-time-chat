@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
   resources :users, only: [ :create ]
+  resources :rooms, only: [ :index, :show, :create, :update, :destroy ]
+  resources :rooms do
+    member do
+      post :invite
+      delete :leave
+    end
+  end
 
   post "/login", to: "auth#login"
 
