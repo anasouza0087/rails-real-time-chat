@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_211959) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_11_221721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -30,6 +30,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_211959) do
     t.integer "user_id"
   end
 
+  create_table "room_users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "room_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["room_id"], name: "index_room_users_on_room_id"
+    t.index ["user_id"], name: "index_room_users_on_user_id"
+  end
+
   create_table "rooms", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
@@ -46,4 +55,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_211959) do
     t.datetime "updated_at", null: false
     t.string "username"
   end
+
+  add_foreign_key "room_users", "rooms"
+  add_foreign_key "room_users", "users"
 end

@@ -29,7 +29,7 @@ ROOMS {
   datetime created_at
 }
 
-ROOM_PARTICIPANTS {
+room_users {
   int id
   int user_id
   int room_id
@@ -44,8 +44,8 @@ MESSAGES {
   datetime created_at
 }
 
-USERS ||--o{ ROOM_PARTICIPANTS : participates
-ROOMS ||--o{ ROOM_PARTICIPANTS : contains
+USERS ||--o{ room_users : participates
+ROOMS ||--o{ room_users : contains
 
 USERS ||--o{ MESSAGES : sends
 ROOMS ||--o{ MESSAGES : contains

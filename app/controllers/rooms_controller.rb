@@ -1,14 +1,20 @@
 class RoomsController < ApplicationController
-  before_action :authorize
-  before_action :set_room, only: [ :show, :update, :destroy, :invite, :leave ]
+  before_action :authorize_request
+  before_action :set_room, only: [  :update, :destroy, :invite, :leave ]
 
   def index
     render json: current_user.rooms
   end
 
-  def show
-    render json: @room
+def show
+  room = current_user.rooms.find_by(id: params[:id])
+
+  if room
+    render json: room
+  else
+    render json: { error: "Sala não encontrada" }, status: :not_found
   end
+end
 
   def create
     room = Room.new(room_params)
