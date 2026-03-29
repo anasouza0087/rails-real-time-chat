@@ -3,7 +3,7 @@ class RoomsController < ApplicationController
   before_action :set_room, only: [  :update, :destroy, :invite, :leave ]
 
   def index
-    render json: current_user.rooms
+    render json: current_user.rooms.order(updated_at: :desc)
   end
 
 def show
@@ -75,6 +75,6 @@ end
   end
 
   def room_params
-    params.require(:room).permit(:name)
+    params.require(:room).permit(:name, :description)
   end
 end
