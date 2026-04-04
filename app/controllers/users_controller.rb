@@ -1,6 +1,26 @@
 class UsersController < ApplicationController
       skip_before_action :authorize_request, only: [ :create ]
 
+def show
+  user = User.find_by(id: params[:id])
+
+  if user
+    render json: user
+  else
+    render json: { error: "Usuário não encontrado" }, status: :not_found
+  end
+end
+
+  def index
+    if params[:query].present?
+      query = "%#{params[:query]}%"
+      users = User.where("name ILIKE ? OR username ILIKE ?", query, query)
+    else
+      users = User.all
+    end
+
+    render json: users
+  end
 
   def create
     user = User.new(user_params)
