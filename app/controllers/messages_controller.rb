@@ -12,11 +12,26 @@ class MessagesController < ApplicationController
     message = @room.messages.build(message_params)
     message.user = current_user
 
-    if message.save
-      render json: message, include: :user, status: :created
-    else
-      render json: { errors: message.errors.full_messages }, status: :unprocessable_entity
-    end
+  if message.save
+    ActionCable.server.broadcast(
+      "room_#{@room.id}",
+      {
+        id: message.id,
+        content: message.content,
+        user_id: message.user_id,
+        room_id: message.room_id,
+        created_at: message.created_at,
+        user: {
+          id: message.user.id,
+          username: message.user.username
+        }
+      }
+    )
+
+    render json: message, include: :user, status: :created
+  else
+    render json: { errors: message.errors.full_messages }, status: :unprocessable_entity
+  end
   end
 
   private
