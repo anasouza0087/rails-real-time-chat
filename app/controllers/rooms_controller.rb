@@ -2,9 +2,20 @@ class RoomsController < ApplicationController
   before_action :authorize_request
   before_action :set_room, only: [  :update, :destroy, :invite, :leave ]
 
-  def index
-    render json: current_user.rooms.order(updated_at: :desc)
-  end
+def index
+  page = params[:page].to_i
+  page = 1 if page < 1
+
+  per_page = 10
+  offset = (page - 1) * per_page
+
+  rooms = current_user.rooms
+                      .order(created_at: :desc)
+                      .limit(per_page)
+                      .offset(offset)
+
+  render json: rooms
+end
 
 def show
   room = current_user.rooms.find_by(id: params[:id])
